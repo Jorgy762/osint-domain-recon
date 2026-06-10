@@ -14,6 +14,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - JSON report export option
 - Refactor single-file script into proper module structure
 
+## [0.2.1] - 2026-06-09
+
+### Changed
+
+- Reorganized file structure for readability. All constants moved into a single block near the top of the file. Functions reordered to match runtime execution order.
+- Added section-divider banner comments (e.g. `# === STAGE 3: DNS ENUMERATION ===`) marking the 11 major regions of the file.
+- Decomposed `get_email_security` into a thin coordinator plus four focused helpers (`_audit_spf`, `_audit_dmarc`, `_audit_dkim`, `_audit_bimi`).
+- Decomposed `save_report` into a thin coordinator plus seven section-writer helpers.
+- Added type hints to every function signature for both public and helper functions.
+- Extracted magic numbers (DNS timeout, HTTP timeout, RFC 7208 SPF lookup limits) into named module-level constants.
+- Improved inline comments in the dense logic sections: the domain validation regex now has line-by-line explanations, the recursive SPF resolver explains its decision points, and the DKIM detection logic documents why its version check is intentionally loose per RFC 6376.
+
+### Fixed
+
+- No functional fixes. This release is a structural refactor with no behavior changes. All outputs, CLI flags, dict shapes, and cache file locations are identical to v0.2.0.
+
 ## [0.2.0] - 2026-05-31
 
 ### Added
@@ -55,6 +71,7 @@ Initial public release.
 - Optional plaintext report export with `-o` flag.
 - `--no-http` flag to skip HTTP/HTTPS probing.
 
-[Unreleased]: https://github.com/Jorgy762/osint-domain-recon/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/Jorgy762/osint-domain-recon/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/Jorgy762/osint-domain-recon/releases/tag/v0.2.1
 [0.2.0]: https://github.com/Jorgy762/osint-domain-recon/releases/tag/v0.2.0
 [0.1.0]: https://github.com/Jorgy762/osint-domain-recon/commits/main
