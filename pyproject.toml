@@ -1,0 +1,92 @@
+# pyproject.toml
+#
+# This file is the modern Python project definition standard (PEP 621).
+# It replaces the older setup.py / setup.cfg pattern and serves as the
+# single source of truth for project metadata, dependencies, and build
+# configuration.
+#
+# Install this package in development (editable) mode with:
+#     pip install -e .
+#
+# Install with development extras (e.g. pytest) with:
+#     pip install -e .[dev]
+
+# ----------------------------------------------------------------------------
+# Build system: tells pip which library to use to build the package.
+# setuptools is the standard choice for most Python projects.
+# ----------------------------------------------------------------------------
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+# ----------------------------------------------------------------------------
+# Project metadata: this is what shows up on PyPI if published, and what
+# tools like pip and importlib.metadata read at runtime.
+# ----------------------------------------------------------------------------
+[project]
+name = "osint-domain-recon"
+version = "0.3.0"
+description = "OSINT domain reconnaissance via RDAP, DNS, email-auth, and HTTP probing"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "Jorgy762"},
+]
+keywords = ["osint", "recon", "cybersecurity", "rdap", "dmarc", "dkim", "spf"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: System Administrators",
+    "Intended Audience :: Information Technology",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Security",
+]
+
+# Runtime dependencies: pip installs these automatically when the package
+# is installed.
+dependencies = [
+    "whoisit>=4.0.0",
+    "python-whois>=0.9.0",
+    "dnspython>=2.6.0",
+    "requests>=2.31.0",
+]
+
+# Optional dependency groups. Install with:  pip install -e .[dev]
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+]
+
+# Project URLs displayed on PyPI and in some package browsers.
+[project.urls]
+Homepage = "https://github.com/Jorgy762/osint-domain-recon"
+Repository = "https://github.com/Jorgy762/osint-domain-recon"
+Issues = "https://github.com/Jorgy762/osint-domain-recon/issues"
+Changelog = "https://github.com/Jorgy762/osint-domain-recon/blob/main/CHANGELOG.md"
+
+# Console script entry point: this registers "osint-recon" as a command
+# line tool that calls into the cli.main() function. After "pip install -e ."
+# you can run the tool from anywhere just by typing:  osint-recon example.com
+[project.scripts]
+osint-recon = "osint_recon.cli:main"
+
+# ----------------------------------------------------------------------------
+# Setuptools-specific configuration: tells the build system where the
+# package source lives. Required for src-layout projects.
+# ----------------------------------------------------------------------------
+[tool.setuptools.packages.find]
+where = ["src"]
+
+# ----------------------------------------------------------------------------
+# Pytest configuration: tells pytest where to find tests and what to call
+# them. Test files match test_*.py and live under tests/.
+# ----------------------------------------------------------------------------
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"

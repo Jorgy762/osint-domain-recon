@@ -28,47 +28,63 @@ Built as a learning project to bridge IT/sysadmin knowledge with practical cyber
 ## Requirements
 
 - Python 3.10 or higher
-- The following third-party libraries:
+- Runtime dependencies (installed automatically via `pip install -e .`):
+  - `whoisit` (RDAP)
+  - `python-whois` (legacy WHOIS fallback)
+  - `dnspython` (DNS resolution)
+  - `requests` (HTTP probing)
 
-```
-pip install whoisit python-whois dnspython requests
+---
+
+## Installation
+
+Clone the repository and install in editable mode:
+
+```bash
+git clone https://github.com/Jorgy762/osint-domain-recon.git
+cd osint-domain-recon
+python -m venv .venv
+source .venv/Scripts/activate          # Linux/macOS: source .venv/bin/activate
+pip install -e .
 ```
 
-The `whoisit` library handles RDAP queries. `python-whois` remains in the dependency list as a fallback for legacy WHOIS lookups on TLDs without RDAP support.
+The `-e` flag (editable install) means changes to the source files take effect immediately without reinstalling. After installation, the `osint-recon` command is available on your PATH inside the activated venv.
+
+To also install development dependencies (pytest, used in a future release for tests):
+
+```bash
+pip install -e .[dev]
+```
 
 ---
 
 ## Usage
 
-### Basic scan (output to terminal only)
+The tool can be invoked two ways. Both produce identical output.
 
-```
-python osint_recon.py example.com
-```
+### As a console command (recommended)
 
-### Save report to a file
-
-```
-python osint_recon.py example.com -o report.txt
-```
-
-### Skip HTTP/HTTPS probing
-
-```
-python osint_recon.py example.com --no-http
+```bash
+osint-recon example.com
+osint-recon example.com -o report.txt
+osint-recon example.com --no-http
+osint-recon example.com --no-email-security
 ```
 
-### Skip email authentication audit
+### As a Python module
 
-```
-python osint_recon.py example.com --no-email-security
+```bash
+python -m osint_recon example.com
+python -m osint_recon example.com -o report.txt
 ```
 
-### Combine flags
+### Flags
 
-```
-python osint_recon.py example.com --no-http --no-email-security -o report.txt
-```
+| Flag | Purpose |
+|------|---------|
+| `-o FILE`, `--output FILE` | Save report to a plaintext file |
+| `--no-http` | Skip HTTP/HTTPS probing |
+| `--no-email-security` | Skip email-authentication audit (SPF/DMARC/DKIM/BIMI) |
 
 ---
 
@@ -133,10 +149,24 @@ python osint_recon.py example.com --no-http --no-email-security -o report.txt
 
 ```
 osint-domain-recon/
-├── osint_recon.py     # Main script
-├── CHANGELOG.md       # Version history
-├── .gitignore
-└── README.md          # This file
+├── src/
+│   └── osint_recon/
+│       ├── __init__.py           # Package metadata, version lookup
+│       ├── __main__.py           # Entry point for python -m osint_recon
+│       ├── cli.py                # Argparse, dependency check, main coordinator
+│       ├── constants.py          # Regex, lookup tables, RFC 7208 limits
+│       ├── utils.py              # Display helpers (_format_value, _print_fields)
+│       ├── validation.py         # Domain input validation, startup banner
+│       ├── registration.py       # RDAP lookup with WHOIS fallback
+│       ├── dns_enum.py           # IP resolution, DNS records, service token classifier
+│       ├── email_security.py     # SPF, DMARC, DKIM, BIMI auditors
+│       ├── http_probe.py         # HTTP/HTTPS availability checks
+│       └── reporting.py          # Plaintext report writer
+├── tests/                        # Pytest test suite (added in v0.3.0)
+├── pyproject.toml                # Package definition (PEP 621)
+├── CHANGELOG.md                  # Version history (Keep a Changelog format)
+├── README.md                     # This file
+└── .gitignore
 ```
 
 See [CHANGELOG.md](CHANGELOG.md) for the full version history.
@@ -150,6 +180,7 @@ See [CHANGELOG.md](CHANGELOG.md) for the full version history.
 - **Honest about limitations.** The DKIM probe makes clear that "not found" means "not found at common selectors," not "DKIM does not exist." Any tool that pretends to ground truth it cannot deliver is worse than one that admits its limits.
 - **CLI-first.** No GUI, no web interface. Stays a clean command-line tool.
 - **Heavily commented.** Code should be readable by someone learning Python, not just by experienced developers.
+- **Modular structure.** Each scan stage lives in its own module so the tool is testable and maintainable as it grows.
 
 ---
 
@@ -157,12 +188,12 @@ See [CHANGELOG.md](CHANGELOG.md) for the full version history.
 
 Potential future additions:
 
+- [ ] Pytest test suite covering the pure-logic helpers (planned for v0.3.0)
 - [ ] Subdomain enumeration (wordlist plus certificate transparency log lookups)
 - [ ] SSL/TLS certificate inspection (expiry, issuer, SANs, cipher info)
 - [ ] Shodan API integration for open port data
 - [ ] JSON report export option
 - [ ] Banner grabbing
-- [ ] Refactor single-file script into proper module structure
 
 ---
 
