@@ -1,0 +1,44 @@
+# .gitattributes
+#
+# Declares explicit line ending policy for files in this repository.
+# Without this file, Git relies on each developer's core.autocrlf setting,
+# which varies by platform and produces inconsistent warnings and behavior.
+#
+# With this file, line endings are determined by file type, not by who
+# checked out the repo.
+
+# Default behavior: normalize all text files to LF on commit, automatically
+# detect whether a file is text. This is the recommended setting per Git's
+# own documentation.
+* text=auto eol=lf
+
+# Source code: explicitly LF. These never need CRLF, even on Windows.
+*.py    text eol=lf
+*.toml  text eol=lf
+*.md    text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
+*.json  text eol=lf
+*.txt   text eol=lf
+
+# Shell scripts: must be LF, otherwise they break on Linux/macOS.
+*.sh    text eol=lf
+
+# Windows batch files: explicitly CRLF since they only run on Windows
+# and some interpreters require it.
+*.bat   text eol=crlf
+*.cmd   text eol=crlf
+
+# Binary files: never touch line endings.
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.pdf   binary
+*.zip   binary
+*.tar   binary
+*.gz    binary
+*.exe   binary
+*.dll   binary
+*.so    binary
