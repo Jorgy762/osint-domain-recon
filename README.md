@@ -50,10 +50,29 @@ pip install -e .
 
 The `-e` flag (editable install) means changes to the source files take effect immediately without reinstalling. After installation, the `osint-recon` command is available on your PATH inside the activated venv.
 
-To also install development dependencies (pytest, used in a future release for tests):
+To also install development dependencies (pytest, used to run the test suite):
 
 ```bash
 pip install -e .[dev]
+```
+
+---
+
+## Testing
+
+The test suite covers the pure-logic helpers: domain validation, SPF parsing, DMARC parsing, service-token classification, datetime formatting, and report section writing. Tests do not require network access and complete in under a second.
+
+To run the tests, install development dependencies and invoke pytest:
+
+```bash
+pip install -e .[dev]
+pytest
+```
+
+Expected output:
+
+```
+============================== 67 passed in 0.17s ==============================
 ```
 
 ---
