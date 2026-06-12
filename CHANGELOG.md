@@ -12,9 +12,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Subdomain enumeration (wordlist plus certificate transparency log lookups)
 - SSL/TLS certificate inspection (expiry, issuer, SANs, cipher info)
 - JSON report export option
-- Refactor single-file script into proper module structure
 
-## [0.2.1] - 2026-06-09
+## [0.3.0] - 2026-06-11
+
+### Added
+
+- `pyproject.toml` using PEP 621 for project metadata, runtime dependencies, dev extras, and build configuration. The project is now pip-installable.
+- Console script entry point `osint-recon` registered at install time. After `pip install -e .` the tool runs as `osint-recon example.com` from anywhere on PATH inside the venv.
+- Pytest test suite under `tests/` covering the pure-logic helpers: domain validation, SPF parsing, DMARC parsing, service-token classification, datetime formatting, and report section writing. 67 tests total, all pass in under a second, no network access required.
+- Development dependencies (`pytest`) declared as an optional extra. Install with `pip install -e .[dev]`.
+- Package version metadata sourced from `importlib.metadata.version()` rather than hardcoded in code, giving a single source of truth in `pyproject.toml`.
+
+### Changed
+
+- Refactored from a single 1083-line script into a proper Python package under `src/osint_recon/`. New module layout: `validation.py`, `registration.py`, `dns_enum.py`, `email_security.py`, `http_probe.py`, `reporting.py`, plus shared `constants.py`, `utils.py`, and `cli.py`.
+- Source layout follows the Python Packaging User Guide recommendation (`src/` directory) which prevents accidental imports of the development copy.
+- README updated with new installation, usage, and testing instructions reflecting the package structure.
+
+### Removed
+
+- Old monolithic `osint_recon.py` at the repository root. All functionality is preserved in the new module structure.
+
+### Notes
+
+- No functional changes to scan output, CLI flags, return-value dict shapes, or cache file locations. Parity with v0.2.1 verified via dedicated unit tests during development.
+
+## [0.2.1] - 2026-05-31
 
 ### Changed
 
@@ -71,7 +94,8 @@ Initial public release.
 - Optional plaintext report export with `-o` flag.
 - `--no-http` flag to skip HTTP/HTTPS probing.
 
-[Unreleased]: https://github.com/Jorgy762/osint-domain-recon/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/Jorgy762/osint-domain-recon/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/Jorgy762/osint-domain-recon/releases/tag/v0.3.0
 [0.2.1]: https://github.com/Jorgy762/osint-domain-recon/releases/tag/v0.2.1
 [0.2.0]: https://github.com/Jorgy762/osint-domain-recon/releases/tag/v0.2.0
 [0.1.0]: https://github.com/Jorgy762/osint-domain-recon/commits/main
