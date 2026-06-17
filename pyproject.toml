@@ -25,7 +25,7 @@ build-backend = "setuptools.build_meta"
 # ----------------------------------------------------------------------------
 [project]
 name = "osint-domain-recon"
-version = "0.3.0"
+version = "0.3.1"
 description = "OSINT domain reconnaissance via RDAP, DNS, email-auth, and HTTP probing"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -61,6 +61,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0.0",
+    "ruff>=0.4.0",
 ]
 
 # Project URLs displayed on PyPI and in some package browsers.
@@ -90,3 +91,35 @@ where = ["src"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = "test_*.py"
+
+# ----------------------------------------------------------------------------
+# Ruff configuration: linter and code style checker.
+# Run locally with:  ruff check .
+# Auto-fix with:     ruff check --fix .
+# ----------------------------------------------------------------------------
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+# Rule sets:
+#   E, W: pycodestyle errors and warnings (PEP 8)
+#   F:    pyflakes (undefined names, unused imports)
+#   I:    isort (import ordering)
+#   UP:   pyupgrade (use modern Python syntax)
+#   B:    flake8-bugbear (likely bugs and anti-patterns)
+#   SIM:  flake8-simplify (simplification suggestions)
+select = ["E", "W", "F", "I", "UP", "B", "SIM"]
+ignore = [
+    "E501",  # line too long: enforced informally, ruff is too strict here
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Tests intentionally use star-imports of test helpers and may shadow
+# builtins as part of fixture naming. Relax those rules for the tests dir.
+"tests/*" = ["F401", "F811"]
+# cli.py intentionally imports submodules AFTER calling _check_dependencies()
+# so missing third-party libraries produce friendly error messages instead
+# of raw ImportError tracebacks. E402 (module-level import not at top)
+# would otherwise flag these intentional late imports.
+"src/osint_recon/cli.py" = ["E402"]

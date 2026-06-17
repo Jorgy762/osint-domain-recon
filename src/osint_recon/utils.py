@@ -38,14 +38,9 @@ def _print_fields(fields: dict[str, Any]) -> None:
             continue
 
         if isinstance(value, list):
-            # Deduplicate while preserving original order.
-            seen: set[str] = set()
-            unique: list[str] = []
-            for v in value:
-                s = str(_format_value(v))
-                if s not in seen:
-                    seen.add(s)
-                    unique.append(s)
+            # dict.fromkeys preserves insertion order while deduplicating
+            # (guaranteed in Python 3.7+). Replaces a 7-line manual loop.
+            unique = list(dict.fromkeys(str(_format_value(v)) for v in value))
             value = unique[0] if len(unique) == 1 else ", ".join(unique[:5])
         else:
             value = _format_value(value)

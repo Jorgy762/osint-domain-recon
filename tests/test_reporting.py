@@ -7,16 +7,16 @@ without writing real files to disk.
 """
 
 import io
+
 from osint_recon.reporting import (
+    _write_dns_section,
+    _write_email_security_section,
     _write_header,
+    _write_http_section,
     _write_ip_section,
     _write_registration_section,
-    _write_dns_section,
     _write_service_tokens_section,
-    _write_email_security_section,
-    _write_http_section,
 )
-
 
 # ============================================================================
 # HEADER SECTION

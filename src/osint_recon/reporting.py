@@ -21,7 +21,7 @@ def _write_header(f: Any, domain: str, timestamp: str) -> None:
     f.write("=" * 55 + "\n")
     f.write(f"  Target Domain : {domain}\n")
     f.write(f"  Scan Time     : {timestamp}\n")
-    f.write(f"  Tool          : github.com/Jorgy762/osint-domain-recon\n")
+    f.write("  Tool          : github.com/Jorgy762/osint-domain-recon\n")
     f.write("=" * 55 + "\n\n")
 
 
@@ -102,11 +102,11 @@ def _write_email_security_section(f: Any, email_data: dict[str, Any]) -> None:
         f.write(f"    DNS lookups        : {spf['dns_lookups']} / {SPF_MAX_DNS_LOOKUPS}\n")
         f.write(f"    Void lookups       : {spf['void_lookups']} / {SPF_MAX_VOID_LOOKUPS}\n")
         if spf["dns_lookups"] > SPF_MAX_DNS_LOOKUPS:
-            f.write(f"    [!] EXCEEDS RFC 7208 limit. SPF will return permerror.\n")
+            f.write("    [!] EXCEEDS RFC 7208 limit. SPF will return permerror.\n")
         if spf["void_lookups"] > SPF_MAX_VOID_LOOKUPS:
-            f.write(f"    [!] EXCEEDS RFC 7208 void-lookup limit.\n")
+            f.write("    [!] EXCEEDS RFC 7208 void-lookup limit.\n")
         if spf["duplicate_records"]:
-            f.write(f"    [!] Multiple SPF records published. RFC 7208 forbids this.\n")
+            f.write("    [!] Multiple SPF records published. RFC 7208 forbids this.\n")
         for err in spf.get("errors", []):
             f.write(f"    [!] {err}\n")
     else:

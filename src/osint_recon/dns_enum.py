@@ -81,7 +81,7 @@ def get_dns_records(domain: str) -> dict[str, Any]:
         except dns.resolver.NoAnswer:
             print(f"    [-] No {record_type} records found")
         except dns.resolver.NXDOMAIN:
-            print(f"    [-] Domain does not exist (NXDOMAIN)")
+            print("    [-] Domain does not exist (NXDOMAIN)")
             break   # no point continuing if the domain itself does not resolve
         except dns.resolver.Timeout:
             print(f"    [-] {record_type} lookup timed out")

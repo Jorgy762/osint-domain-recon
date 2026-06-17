@@ -13,6 +13,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - SSL/TLS certificate inspection (expiry, issuer, SANs, cipher info)
 - JSON report export option
 
+## [0.3.1] - 2026-06-12
+
+### Added
+
+- Ruff linter configuration in `pyproject.toml` with sensible default rule set (pycodestyle, pyflakes, isort, pyupgrade, bugbear, simplify). Install with `pip install -e .[dev]` and run with `ruff check .`.
+- GitHub Actions CI workflow at `.github/workflows/test.yml` running ruff and pytest on push and pull request, across Python 3.10, 3.11, 3.12, and 3.13.
+- CI status badge in README.
+
+### Changed
+
+- Consolidated five separate `whoisit.errors` exception handlers in `registration.py` into a single base-class catch on `WhoisItError`. The specific error class surfaces in the printed message via `type(e).__name__`. Net effect: 15 lines reduced to 3, behavior identical.
+- Replaced the manual deduplication loop in `utils._print_fields` with the `dict.fromkeys()` idiom. Net effect: 7 lines reduced to 2, behavior identical.
+- Compacted argparse argument definitions in `cli.py` from multi-line blocks to one-liners where they fit. Net effect: 20 lines reduced to 5.
+- Routed dependency check errors and domain validation errors to `stderr` instead of `stdout`. Users piping normal output to a file now still see error messages on screen.
+- Auto-fixed import ordering across all modules per ruff's isort ruleset.
+- Removed `f` prefix from f-strings that contained no placeholders (8 instances flagged by ruff).
+- Combined two adjacent `elif` branches in `_parse_spf` using `or` per ruff's simplify ruleset.
+
+### Notes
+
+- No functional changes to scan output, CLI flags, return-value dict shapes, or cache file locations. All 67 unit tests pass.
+
 ## [0.3.0] - 2026-06-11
 
 ### Added
@@ -94,7 +116,8 @@ Initial public release.
 - Optional plaintext report export with `-o` flag.
 - `--no-http` flag to skip HTTP/HTTPS probing.
 
-[Unreleased]: https://github.com/Jorgy762/osint-domain-recon/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/Jorgy762/osint-domain-recon/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/Jorgy762/osint-domain-recon/releases/tag/v0.3.1
 [0.3.0]: https://github.com/Jorgy762/osint-domain-recon/releases/tag/v0.3.0
 [0.2.1]: https://github.com/Jorgy762/osint-domain-recon/releases/tag/v0.2.1
 [0.2.0]: https://github.com/Jorgy762/osint-domain-recon/releases/tag/v0.2.0

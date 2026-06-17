@@ -1,0 +1,48 @@
+# .github/workflows/test.yml
+#
+# Continuous Integration: runs the ruff linter and the pytest suite on every
+# push to main and every pull request targeting main. Tests against the four
+# Python versions the project supports.
+#
+# Status badge URL (paste into README.md):
+#   https://github.com/Jorgy762/osint-domain-recon/actions/workflows/test.yml/badge.svg
+
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      # Run all matrix combinations even if one fails, so we see the full
+      # picture rather than aborting on the first failure.
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install package and dev dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .[dev]
+
+      - name: Run ruff linter
+        run: ruff check .
+
+      - name: Run pytest
+        run: pytest -v

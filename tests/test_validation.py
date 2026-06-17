@@ -6,8 +6,8 @@ path stripping, dot stripping) and rejection of malformed inputs.
 """
 
 import pytest
-from osint_recon.validation import validate_domain
 
+from osint_recon.validation import validate_domain
 
 # ============================================================================
 # NORMALIZATION TESTS

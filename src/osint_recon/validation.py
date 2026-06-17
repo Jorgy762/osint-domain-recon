@@ -42,6 +42,6 @@ def validate_domain(raw: str) -> str:
         .rstrip(".")            # drop trailing dot (FQDN form)
     )
     if not DOMAIN_REGEX.match(cleaned):
-        print(f"[!] Invalid domain format: {cleaned!r}")
+        print(f"[!] Invalid domain format: {cleaned!r}", file=sys.stderr)
         sys.exit(1)
     return cleaned

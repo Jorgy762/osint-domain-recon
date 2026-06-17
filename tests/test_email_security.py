@@ -8,11 +8,10 @@ in an integration test suite, not a unit test suite.
 """
 
 from osint_recon.email_security import (
-    _parse_spf,
-    _parse_dmarc,
     _count_spf_lookups,
+    _parse_dmarc,
+    _parse_spf,
 )
-
 
 # ============================================================================
 # _parse_spf TESTS

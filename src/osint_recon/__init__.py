@@ -10,7 +10,7 @@ The package version is read from the installed package metadata
 one source of truth for the version number.
 """
 
-from importlib.metadata import version, PackageNotFoundError
+from importlib.metadata import PackageNotFoundError, version
 
 try:
     __version__ = version("osint-domain-recon")

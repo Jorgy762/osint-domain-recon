@@ -14,8 +14,8 @@ permerrors.
 
 from typing import Any
 
-import dns.resolver
 import dns.exception
+import dns.resolver
 
 from .constants import (
     COMMON_DKIM_SELECTORS,
@@ -161,9 +161,7 @@ def _parse_spf(record_text: str) -> tuple[str, list[str]]:
                 "~": "~all (SOFT FAIL, quarantine)",
                 "?": "?all (NEUTRAL, no policy)",
             }.get(q_char, q_char)
-        elif bare.lower().startswith(("include:", "ip4:", "ip6:", "a:", "mx:", "exists:")):
-            senders.append(bare)
-        elif bare.lower() in ("a", "mx"):
+        elif bare.lower().startswith(("include:", "ip4:", "ip6:", "a:", "mx:", "exists:")) or bare.lower() in ("a", "mx"):
             senders.append(bare)
 
     return qualifier, senders
@@ -205,10 +203,10 @@ def _audit_spf(domain: str) -> dict[str, Any] | None:
     print(f"          Policy on `all`     : {qualifier}")
     print(f"          DNS lookups (chain) : {lookups} / {SPF_MAX_DNS_LOOKUPS} (RFC 7208 limit)")
     if lookups > SPF_MAX_DNS_LOOKUPS:
-        print(f"          [!] EXCEEDS LIMIT. SPF will return permerror.")
+        print("          [!] EXCEEDS LIMIT. SPF will return permerror.")
     print(f"          Void lookups        : {voids} / {SPF_MAX_VOID_LOOKUPS} (RFC 7208 limit)")
     if voids > SPF_MAX_VOID_LOOKUPS:
-        print(f"          [!] EXCEEDS LIMIT. SPF will return permerror.")
+        print("          [!] EXCEEDS LIMIT. SPF will return permerror.")
     for err in errs:
         print(f"          [!] {err}")
     if len(spf_records) > 1:
@@ -251,7 +249,7 @@ def _audit_dmarc(domain: str) -> dict[str, Any] | None:
     print(f"    [+] DMARC: {dmarc}")
     print(f"          Policy              : p={policy}")
     if policy == "none":
-        print(f"          [!] Policy is 'none'. Reporting only, no enforcement.")
+        print("          [!] Policy is 'none'. Reporting only, no enforcement.")
     print(f"          Subdomain policy    : sp={sub_policy}")
     print(f"          Percentage applied  : pct={pct}")
     if rua:

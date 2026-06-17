@@ -9,7 +9,6 @@ suite, not a unit test suite.
 
 from osint_recon.dns_enum import _classify_service_tokens
 
-
 # ============================================================================
 # POSITIVE CASES: known service tokens should be classified
 # ============================================================================

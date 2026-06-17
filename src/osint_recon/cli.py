@@ -44,10 +44,10 @@ def _check_dependencies() -> None:
         except ImportError:
             missing.append(pip_name)
     if missing:
-        print("[!] Missing dependencies:")
+        print("[!] Missing dependencies:", file=sys.stderr)
         for pkg in missing:
-            print(f"    - {pkg}")
-        print(f"\n    Run: pip install {' '.join(missing)}")
+            print(f"    - {pkg}", file=sys.stderr)
+        print(f"\n    Run: pip install {' '.join(missing)}", file=sys.stderr)
         sys.exit(1)
 
 
@@ -63,13 +63,12 @@ _check_dependencies()
 # These imports rely on the dependencies verified above. Putting them
 # after the check ensures dependency errors surface with friendly
 # messages rather than as raw ImportError tracebacks.
-from .validation import print_banner, validate_domain
-from .dns_enum import resolve_ip, get_dns_records
-from .registration import get_registration
+from .dns_enum import get_dns_records, resolve_ip
 from .email_security import get_email_security
 from .http_probe import check_http_status
+from .registration import get_registration
 from .reporting import save_report
-
+from .validation import print_banner, validate_domain
 
 # ----------------------------------------------------------------------------
 # MAIN ENTRY POINT
@@ -86,25 +85,11 @@ def main() -> None:
             "RDAP, DNS, email-auth, and HTTP probing."
         ),
     )
-    parser.add_argument(
-        "domain",
-        help="Target domain to scan (e.g., example.com)",
-    )
-    parser.add_argument(
-        "-o", "--output",
-        help="Save report to a file",
-        default=None,
-    )
-    parser.add_argument(
-        "--no-http",
-        action="store_true",
-        help="Skip HTTP/HTTPS probing",
-    )
-    parser.add_argument(
-        "--no-email-security",
-        action="store_true",
-        help="Skip email-authentication audit (SPF/DMARC/DKIM/BIMI)",
-    )
+    parser.add_argument("domain", help="Target domain to scan (e.g., example.com)")
+    parser.add_argument("-o", "--output", default=None, help="Save report to a file")
+    parser.add_argument("--no-http", action="store_true", help="Skip HTTP/HTTPS probing")
+    parser.add_argument("--no-email-security", action="store_true",
+                        help="Skip email-authentication audit (SPF/DMARC/DKIM/BIMI)")
     args = parser.parse_args()
 
     # Normalize and validate the target. Exits on malformed input.

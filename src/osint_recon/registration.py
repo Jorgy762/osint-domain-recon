@@ -15,8 +15,8 @@ do not hit IANA on every scan run.
 
 from typing import Any
 
-import whoisit
 import whois  # legacy WHOIS library, used only as a fallback
+import whoisit
 
 from .constants import CACHE_DAYS, CACHE_DIR, CACHE_FILE
 from .utils import _print_fields
@@ -133,20 +133,10 @@ def get_registration(domain: str) -> dict[str, Any]:
         _print_fields(fields)
         return fields
 
-    # Whoisit raises specific exception types for distinct failure modes.
-    # All of them trigger the WHOIS fallback path.
-    except whoisit.errors.UnsupportedError:
-        print("    [!] RDAP not supported for this TLD. Falling back to WHOIS...")
-        return _whois_fallback(domain)
-    except whoisit.errors.RateLimitedError as e:
-        print(f"    [!] RDAP server rate-limited the request ({e}). Falling back to WHOIS...")
-        return _whois_fallback(domain)
-    except whoisit.errors.BootstrapError as e:
-        print(f"    [!] RDAP bootstrap failed ({e}). Falling back to WHOIS...")
-        return _whois_fallback(domain)
-    except whoisit.errors.QueryError as e:
-        print(f"    [!] RDAP query failed ({e}). Falling back to WHOIS...")
-        return _whois_fallback(domain)
+    # Whoisit's WhoisItError is the base class for all whoisit exceptions
+    # (UnsupportedError, RateLimitedError, BootstrapError, QueryError, etc.).
+    # A single catch on the base class handles all RDAP failure modes with
+    # the specific exception class name surfaced in the printed message.
     except whoisit.errors.WhoisItError as e:
-        print(f"    [!] RDAP error ({e}). Falling back to WHOIS...")
+        print(f"    [!] RDAP failed ({type(e).__name__}: {e}). Falling back to WHOIS...")
         return _whois_fallback(domain)

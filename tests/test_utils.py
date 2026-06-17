@@ -6,6 +6,7 @@ for all non-datetime values.
 """
 
 from datetime import datetime
+
 from osint_recon.utils import _format_value
 
 

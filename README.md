@@ -1,5 +1,7 @@
 # OSINT Domain Recon Tool
 
+[![Tests](https://github.com/Jorgy762/osint-domain-recon/actions/workflows/test.yml/badge.svg)](https://github.com/Jorgy762/osint-domain-recon/actions/workflows/test.yml)
+
 A Python-based command-line tool for automated domain reconnaissance. Given a target domain, it pulls registration data via RDAP, enumerates DNS records, classifies SaaS service-verification tokens, audits email authentication (SPF, DMARC, DKIM, BIMI), and probes HTTP/HTTPS availability. All in one run, with an optional plaintext report export.
 
 Built as a learning project to bridge IT/sysadmin knowledge with practical cybersecurity tooling.
@@ -74,6 +76,26 @@ Expected output:
 ```
 ============================== 67 passed in 0.17s ==============================
 ```
+
+---
+
+## Development
+
+The project uses [ruff](https://docs.astral.sh/ruff/) for linting and import sorting. Configuration lives in `pyproject.toml` under `[tool.ruff]`.
+
+Run the linter:
+
+```bash
+ruff check .
+```
+
+Auto-fix issues where possible:
+
+```bash
+ruff check --fix .
+```
+
+GitHub Actions runs both ruff and pytest on every push to `main` and every pull request, against Python 3.10, 3.11, 3.12, and 3.13. Workflow definition lives at `.github/workflows/test.yml`. The status badge at the top of this README reflects the most recent CI run.
 
 ---
 
