@@ -71,10 +71,10 @@ pip install -e .[dev]
 pytest
 ```
 
-Expected output:
+Expected output (timing varies by machine, typically well under one second):
 
 ```
-============================== 67 passed in 0.17s ==============================
+============================== 67 passed ==============================
 ```
 
 ---
@@ -190,6 +190,9 @@ python -m osint_recon example.com -o report.txt
 
 ```
 osint-domain-recon/
+├── .github/
+│   └── workflows/
+│       └── test.yml              # GitHub Actions CI (ruff + pytest)
 ├── src/
 │   └── osint_recon/
 │       ├── __init__.py           # Package metadata, version lookup
@@ -203,10 +206,11 @@ osint-domain-recon/
 │       ├── email_security.py     # SPF, DMARC, DKIM, BIMI auditors
 │       ├── http_probe.py         # HTTP/HTTPS availability checks
 │       └── reporting.py          # Plaintext report writer
-├── tests/                        # Pytest test suite (added in v0.3.0)
-├── pyproject.toml                # Package definition (PEP 621)
+├── tests/                        # Pytest test suite (67 tests, no network required)
+├── pyproject.toml                # Package definition (PEP 621) + ruff config
 ├── CHANGELOG.md                  # Version history (Keep a Changelog format)
 ├── README.md                     # This file
+├── .gitattributes                # Line ending policy
 └── .gitignore
 ```
 
@@ -229,7 +233,6 @@ See [CHANGELOG.md](CHANGELOG.md) for the full version history.
 
 Potential future additions:
 
-- [ ] Pytest test suite covering the pure-logic helpers (planned for v0.3.0)
 - [ ] Subdomain enumeration (wordlist plus certificate transparency log lookups)
 - [ ] SSL/TLS certificate inspection (expiry, issuer, SANs, cipher info)
 - [ ] Shodan API integration for open port data
@@ -248,4 +251,4 @@ This tool is intended for educational purposes and authorized reconnaissance onl
 
 **Jorgy762** | [GitHub](https://github.com/Jorgy762)
 
-Certifications: ISC2 Certified in Cybersecurity | Certified Zero Trust Practitioner | Certified Threat & Malware Analysis | Fortinet Certified Associate in Cybersecurity | OSINT Certificate (WithYouWithMe) | CSA Trusted AI Safety Expert | Microsoft AZ-900 Azure Fundamentals
+Certifications: ISC2 Certified in Cybersecurity | Certified Zero Trust Practitioner | Certified Threat & Malware Analysis | Fortinet Certified Associate in Cybersecurity | OSINT Certificate (WithYouWithMe) | CSA Trusted AI Safety Expert | Microsoft AZ-900 Azure Fundamentals | Unit Information Systems Security Officer (CAF)
